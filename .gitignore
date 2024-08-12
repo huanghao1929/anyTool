@@ -1,0 +1,11 @@
+# 产物
+dist/
+node_modules/
+mock
+
+src/.umi/
+src/.umi-production/
+
+# MAC系统的杂七杂八
+.DS_Store
+

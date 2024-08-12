@@ -1,0 +1,7 @@
+{
+  "extends": "./src/.umi/tsconfig.json",
+  "exclude": ["src/**/*"],
+  "compilerOptions": {
+    "noImplicitAny": false,
+  }
+}
