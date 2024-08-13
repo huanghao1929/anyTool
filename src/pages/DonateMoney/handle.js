@@ -40,7 +40,7 @@ const levelOneWithMoney = [
 ].map((i) => i.split('\t'));
 
 // 非妇联结尾，但是要放入区县级妇联的名称
-const specialNames = ['泰安市泰山景区妇委会'];
+const specialNames = ['泰安市泰山景区妇委会', '淄博经开区妇工委', '淄博高新区妇工委'];
 
 // 从6000元中筛选出 区县 及 其他，
 // 注意要根据map去重，同时将新进入表格的数据也设置进入map。便于处理优秀组织表格时使用

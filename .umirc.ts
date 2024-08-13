@@ -30,6 +30,11 @@ export default defineConfig({
       component: './DonateMoney',
     },
     {
+      name: '线性规划',
+      path: '/lpSolver',
+      component: './LpSolver',
+    },
+    {
       name: '文件上传并解析',
       path: '/parseUploadFile',
       component: './ParseUploadFile',
