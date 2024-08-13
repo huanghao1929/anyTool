@@ -1,7 +1,7 @@
 # 产物
 dist/
 node_modules/
-mock
+
 
 src/.umi/
 src/.umi-production/

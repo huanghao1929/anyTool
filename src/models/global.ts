@@ -1,5 +1,5 @@
 // 全局共享数据示例
-import { parseRegionXlsx, parseTypesXlsx } from '@/utils/parseXlsx';
+import { parseRegionXlsx, parseTypesXlsx } from '@/utils/parseMapXlsx.js';
 import { useEffect, useState } from 'react';
 
 const useUser = () => {
