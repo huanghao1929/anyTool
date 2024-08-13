@@ -208,12 +208,23 @@ export const handleWorkBooks = (moneyWk, orgWk) => {
   const orgDataResult = getLevelByOrgData(orgSheetsMap, allNameMap);
 
   allNameMap = new Map([...allNameMap, ...orgDataResult.allNameMap]);
+  console.log(allNameMap);
+  
   countyLevelResult.push(...orgDataResult.countyLevelResult);
   otherLevelResult.push(...orgDataResult.otherLevelResult);
 
   console.log(
     `处理完优秀组织的表格后, 市的数量:${cityLevelResult.length}, 区县级的数量:${countyLevelResult.length}, 优秀组织的数量:${otherLevelResult.length}, 总数量:${allNameMap.size}`
   );
+  let p = 0;
+  for (let i of allNameMap.keys()) {
+    if (i.includes('妇工委')) {
+      p++
+      console.log(i);
+    }
+  }
+  console.log(p);
+
   return {
     cityLevelResult,
     countyLevelResult,
