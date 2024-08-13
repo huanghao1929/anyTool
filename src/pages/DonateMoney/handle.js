@@ -40,7 +40,7 @@ const levelOneWithMoney = [
 ].map((i) => i.split('\t'));
 
 // 非妇联结尾，但是要放入区县级妇联的名称
-const specialNames = ['泰安市泰山景区妇委会', '淄博经开区妇工委', '淄博高新区妇工委'];
+const specialNames = ['泰安市泰山景区妇委会'];
 
 // 从6000元中筛选出 区县 及 其他，
 // 注意要根据map去重，同时将新进入表格的数据也设置进入map。便于处理优秀组织表格时使用
@@ -59,7 +59,7 @@ const getLevelByMoneyData = (moneyFileData, allNameMap) => {
       console.log('当前在处理6000元的表格时，数据重复了', element[1]);
     } else {
       currentUseMap.set(element[1], element);
-      if (/妇联$/.test(element[1]) || specialNames.includes(element[1])) {
+      if (/妇联$/.test(element[1]) || /妇工委$/.test(element[1])  || specialNames.includes(element[1])) {
         countyLevelResult.push([
           element[1],
           element[2],
