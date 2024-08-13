@@ -25,6 +25,11 @@ export default defineConfig({
       component: './KeyWordsQuery',
     },
     {
+      name: '生成捐赠排序表',
+      path: '/donateMoney',
+      component: './DonateMoney',
+    },
+    {
       name: '文件上传并解析',
       path: '/parseUploadFile',
       component: './ParseUploadFile',
