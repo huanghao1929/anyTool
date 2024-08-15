@@ -16,6 +16,7 @@
     "@umijs/max": "^4.2.5",
     "antd": "^5.4.0",
     "javascript-lp-solver": "^0.4.24",
+    "jszip": "^3.10.1",
     "lodash": "^4.17.21",
     "node-xlsx": "^0.24.0",
     "xlsx": "^0.20.2"

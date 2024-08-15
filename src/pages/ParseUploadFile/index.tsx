@@ -2,10 +2,14 @@ import { PageContainer, ProCard } from '@ant-design/pro-components';
 import { Button, Upload, message } from 'antd';
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
+import JSZip from 'jszip';
 
 const parseUpload: React.FC = () => {
-  const [data, setData] = useState<any>([]);
   const [messageApi, contextHolder] = message.useMessage();
+
+  // ------------------------- Xlsx相关下载 -------------------------
+
+  const [data, setData] = useState<any>([]);
 
   const handleXLSX = (file) => {
     const reader = new FileReader();
@@ -24,7 +28,7 @@ const parseUpload: React.FC = () => {
       // https://github.com/rockboom/SheetJS-docs-zh-CN?tab=readme-ov-file#json
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
       console.log('[ jsonData ] >', jsonData)
-      setData(jsonData);
+      // setData(jsonData);
       messageApi.success('文件解析成功');
     };
     reader.onerror = () => {
@@ -54,16 +58,53 @@ const parseUpload: React.FC = () => {
     },
   };
 
+  // ------------------------- Zip相关下载 -------------------------
+  const handleZip = (file) => { 
+    const zip = new JSZip();
+    const speaiclReg = /^__MACOSX/
+    zip.loadAsync(file).then((zipContent) => {
+      // 展示文件列表
+      zipContent.forEach(async (relativePath, file) => {
+        if (!speaiclReg.test(relativePath)) {
+          console.log(relativePath, file);
+          const fileData = await file.async('blob');
+          handleXLSX(fileData);
+        }
+      })
+  });
+  }
+
+  // 按照文件夹导出文件。
+  const exportZip = (fileGroups) => {
+    const zip = new JSZip();
+  }
+
+  const uploadZipProps = {
+    name: 'file',
+    action: '#',
+    accept: '.zip',
+    beforeUpload(file) {
+      handleZip(file);
+      return false;
+    },
+  }
+
   return (
     <PageContainer>
       {contextHolder}
       <ProCard>
         <Upload {...props}>
-          <Button>点击上传文件</Button>
+          <Button>点击上传文件xlsx</Button>
         </Upload>
       </ProCard>
       <ProCard>
           <Button onClick={downloadXlsx}>点击下载XLSX文件</Button>
+      </ProCard>
+
+      <ProCard>
+        <Upload {...uploadZipProps}>
+          <Button>点击上传文件zip</Button>
+        </Upload>
       </ProCard>
     </PageContainer>
   );
