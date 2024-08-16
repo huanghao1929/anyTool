@@ -37,7 +37,13 @@ const levelOneWithMoney = [
   '烟台市妇联\t160697.15',
   '青岛市妇联\t147310.03',
   '威海市妇联\t78778.97',
-].map((i) => i.split('\t'));
+].map((i) => {
+  const tempData = i.split('\t');
+  tempData[1] = Number(tempData[1]);
+  tempData.push('固定数据');
+  tempData.push(tempData[0].slice(0, 2));
+  return tempData;
+});
 
 // 非妇联结尾，但是要放入区县级妇联的名称
 const specialNames = ['泰安市泰山景区妇委会'];
@@ -64,12 +70,14 @@ const getLevelByMoneyData = (moneyFileData, allNameMap) => {
           element[1],
           element[2],
           `${'附件1'}-id:${element[0]}`,
+          element[3],
         ]);
       } else {
         otherLevelResult.push([
           element[1],
           element[2],
           `${'附件1'}-id:${element[0]}`,
+          element[3],
         ]);
       }
     }
@@ -107,9 +115,9 @@ const handleOneCity = (data, sheetsName, allNameMap) => {
       } else {
         currentUseMap.set(name);
         if (/妇联$/.test(name) || specialNames.includes(name)) {
-          countyLevelResult.push([name, '', `${'优秀组织'}-${sheetsName}`]);
+          countyLevelResult.push([name, '', `${'优秀组织'}-${sheetsName}`, sheetsName]);
         } else {
-          otherLevelResult.push([name, '', `${'优秀组织'}-${sheetsName}`]);
+          otherLevelResult.push([name, '', `${'优秀组织'}-${sheetsName}`, sheetsName]);
         }
       }
     }
@@ -164,7 +172,6 @@ export const handleWorkBooks = (moneyWk, orgWk) => {
     .splice(2)
     .filter((x) => x.length !== 0)
     .sort((a, b) => b[2] - a[2]);
-  console.log(moneyFileData);
 
   // 处理优秀组织，多个表，分批处理
   // key 为sheetName， Value 为 对应的二维数组
@@ -264,4 +271,58 @@ export const groupDataAddMoney = (data, groupSize) => {
   }
 
   return groupedData;
+}
+
+
+
+// 将三个按照市/区/组织区分的二维数组，得到一个按照不同的市区分的Map
+export const handleCitySliceMap = (cityLevelResult, countyLevelResult, otherLevelResult) => {
+  const resultMap = new Map();
+  for (let index = 0; index < cityLevelResult.length; index++) {
+    const element = cityLevelResult[index];
+    if (!element) {
+      console.warn('当前没有element', element, index, cityLevelResult);
+      continue;
+    }
+    const currentCity = element[3];
+    const currentMapResult = resultMap.get(currentCity);
+    if (currentMapResult) {
+      resultMap.set(currentCity, currentMapResult.concat([element]))
+    } else {
+      resultMap.set(currentCity, [element])
+    }
+  }
+  for (let index = 0; index < countyLevelResult.length; index++) {
+    const element = countyLevelResult[index];
+    if (!element) {
+      console.warn('当前没有element', element, index, countyLevelResult);
+      continue;
+    }
+
+    const currentCity = element[3];
+    const currentMapResult = resultMap.get(currentCity);
+    if (currentMapResult) {
+      resultMap.set(currentCity, currentMapResult.concat([element]))
+    } else {
+      resultMap.set(currentCity, [element])
+    }
+  }
+  for (let index = 0; index < otherLevelResult.length; index++) {
+    const element = otherLevelResult[index];
+    if (!element) {
+      console.warn('当前没有element', element, index, otherLevelResult);
+      continue;
+    }
+
+
+    const currentCity = element[3];
+    const currentMapResult = resultMap.get(currentCity);
+    if (currentMapResult) {
+      resultMap.set(currentCity, currentMapResult.concat([element]))
+    } else {
+      resultMap.set(currentCity, [element])
+    }
+  }
+
+  return resultMap;
 }

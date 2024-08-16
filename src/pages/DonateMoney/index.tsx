@@ -6,7 +6,7 @@ import {
 import { Button, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
-import { groupData, groupDataAddMoney, handleWorkBooks } from './handle';
+import { groupData, groupDataAddMoney, handleCitySliceMap, handleWorkBooks } from './handle';
 
 const parseUpload: React.FC = () => {
   // 捐赠金额大于6000的表
@@ -108,6 +108,32 @@ const parseUpload: React.FC = () => {
       return false;
     },
   };
+
+  // ----------------------------- 按照市区导出一个表 -----------------------------------
+  const downloadCitySliceXlsx = () => {
+    if (!exportData) {
+      messageApi.warning('请先上传数据');
+      return;
+    }
+    const { cityLevelResult, countyLevelResult, otherLevelResult } = exportData;
+
+    const citySliceMap = handleCitySliceMap(cityLevelResult, countyLevelResult, otherLevelResult)
+
+    // 创建新的工作薄，但是注意，没有工作表
+    const citySliceWorkbook = XLSX.utils.book_new();
+
+    
+    for (const element of citySliceMap) {
+      console.log(element);
+      const [key, value] = element;
+      // aoa_to_sheet 是将二维数组改成sheets，所以没有样式及合并单元格的内容
+      const oneSheet = XLSX.utils.aoa_to_sheet(value);
+      XLSX.utils.book_append_sheet(citySliceWorkbook, oneSheet, key);
+    }
+    XLSX.writeFile(citySliceWorkbook, '按照市拆分表.xlsx');
+
+    
+  }
   return (
     <PageContainer>
       {contextHolder}
@@ -123,6 +149,9 @@ const parseUpload: React.FC = () => {
       </ProCard>
       <ProCard>
         <Button onClick={downloadXlsx}>点击下载导出的结果文件</Button>
+      </ProCard>
+      <ProCard>
+        <Button onClick={downloadCitySliceXlsx}>点击下载导出市级区分文件</Button>
       </ProCard>
     </PageContainer>
   );
