@@ -3,11 +3,10 @@ import {
   ProCard,
   ProFormUploadDragger,
 } from "@ant-design/pro-components";
-import { message } from "antd";
+import { List, message } from "antd";
 import JSZip from "jszip";
 import React, { useState } from "react";
 import { buildFileTree, checkTreeZip } from "./handle";
-import { List } from "antd";
 
 const parseUpload: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -65,17 +64,20 @@ const parseUpload: React.FC = () => {
           fieldProps={moneyFileProps}
         />
       </ProCard>
-      <ProCard title="异常信息">
-        <List
-          bordered
-          dataSource={errorList}
-          renderItem={(item: any) => (
-            <List.Item>
-              错误路径：{item.path}<br></br>错误信息：{item.msg}
-            </List.Item>
-          )}
-        />
-      </ProCard>
+      {errorList.length > 0 ? (
+        <ProCard title="异常信息">
+          <List
+            bordered
+            dataSource={errorList}
+            renderItem={(item: any) => (
+              <List.Item>
+                错误路径：{item.path}
+                <br></br>错误信息：{item.msg}
+              </List.Item>
+            )}
+          />
+        </ProCard>
+      ) : null}
     </PageContainer>
   );
 };
