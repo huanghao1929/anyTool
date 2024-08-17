@@ -1,5 +1,4 @@
 import * as XLSX from 'xlsx';
-
 // 将数组切换成map, map的key是传入的对象keyd的value值
 // 即 [{a: 'ab'}] => {'ab': {a: 'ab'}} 
 const arrayToMap = (array, mapKey) => {

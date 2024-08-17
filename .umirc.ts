@@ -1,6 +1,9 @@
 import { defineConfig } from '@umijs/max';
 import routers from '@/routers'
 export default defineConfig({
+  alias: {
+    '@': require('path').resolve(__dirname, 'src'),
+  },
   antd: {},
   access: {},
   model: {},
@@ -28,6 +31,11 @@ export default defineConfig({
       name: '生成捐赠排序表',
       path: '/donateMoney',
       component: './DonateMoney',
+    },
+    {
+      name: '腾讯一起捐数据审查',
+      path: '/checkDonateMoney',
+      component: './CheckDonateMoney',
     },
     {
       name: '线性规划',
