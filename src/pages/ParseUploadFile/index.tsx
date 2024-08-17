@@ -28,7 +28,7 @@ const parseUpload: React.FC = () => {
       // https://github.com/rockboom/SheetJS-docs-zh-CN?tab=readme-ov-file#json
       const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
       console.log('[ jsonData ] >', jsonData)
-      // setData(jsonData);
+      setData(jsonData);
       messageApi.success('文件解析成功');
     };
     reader.onerror = () => {
@@ -59,18 +59,28 @@ const parseUpload: React.FC = () => {
   };
 
   // ------------------------- Zip相关下载 -------------------------
+  const decodeFileName = (bytes, type) => {
+    // 使用 GBK 编码解码文件名
+    const decoder = new TextDecoder(type);
+    return decoder.decode(bytes);
+}
   const handleZip = (file) => { 
+    // JSZip 参考手册 http://docs.asprain.cn/jszip/jszip.html#jszip_load_async
     const zip = new JSZip();
     const speaiclReg = /^__MACOSX/
-    zip.loadAsync(file).then((zipContent) => {
+    zip.loadAsync(file, {
+      decodeFileName: (bytes) => decodeFileName(bytes, 'gbk'),
+      createFolders: true,
+    }).then((zipContent) => {
       // 展示文件列表
-      zipContent.forEach(async (relativePath, file) => {
-        if (!speaiclReg.test(relativePath)) {
-          console.log(relativePath, file);
-          const fileData = await file.async('blob');
-          handleXLSX(fileData);
-        }
-      })
+      // zipContent.forEach(async (relativePath, file) => {
+      //   if (!speaiclReg.test(relativePath)) {
+      //     console.log(relativePath, file);
+      //     // const fileData = await file.async('blob');
+      //     // handleXLSX(fileData);
+      //   }
+      // })
+      console.log('zipConteng', zipContent);
   });
   }
 
